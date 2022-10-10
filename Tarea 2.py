@@ -23,7 +23,7 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 from keras.utils import np_utils
 
 df =  pd.read_csv("E://Conocimiento/Física/Otro/Códigos muy pesados para Drive (Si no llora)/CelebA/archive/list_attr_celeba.csv")
-files = tf.data.Dataset.from_tensor_slices(df[0:1])
+files = tf.data.Dataset.from_tensor_slices(df[0])
 atributos = tf.data.Dataset.from_tensor_slices(df.iloc[:,1:].to_numpy())
 data = tf.data.Dataset.zip((files, atributos))
 pic_dir = ("E://Conocimiento/Física/Otro/Códigos muy pesados para Drive (Si no llora)/CelebA/archive/img_align_celeba")
