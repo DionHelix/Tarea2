@@ -23,19 +23,19 @@ from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_a
 from keras.utils import np_utils
 
 df =  pd.read_csv("E://Conocimiento/Física/Otro/Códigos muy pesados para Drive (Si no llora)/CelebA/archive/list_attr_celeba.csv")
-files = tf.data.Dataset.from_tensor_slices(df[0])
-atributos = tf.data.Dataset.from_tensor_slices(df.iloc[:,1:].to_numpy())
-data = tf.data.Dataset.zip((files, atributos))
-pic_dir = ("E://Conocimiento/Física/Otro/Códigos muy pesados para Drive (Si no llora)/CelebA/archive/img_align_celeba")
-print(df.shape, df.head())
+files = tf.data.Dataset.from_tensor_slices(df.loc[0])
+# atributos = tf.data.Dataset.from_tensor_slices(df.iloc[:,1:].to_numpy())
+# data = tf.data.Dataset.zip((files, atributos))
+# pic_dir = ("E://Conocimiento/Física/Otro/Códigos muy pesados para Drive (Si no llora)/CelebA/archive/img_align_celeba")
+# print(df.shape, df.loc[0].head(), data)
 
-def process_file(file_name, atributos):
-    image = tf.io.read_file(pic_dir + file_name)
-    image = tf.image.decode_jpg(image, channels=3)
-    image = tf.image.resize(image, [192, 192])
-    image /= 255.0
-    return image, atributos
+# def process_file(file_name, atributos):
+#     image = tf.io.read_file(pic_dir + file_name)
+#     image = tf.image.decode_jpg(image, channels=3)
+#     image = tf.image.resize(image, [192, 192])
+#     image /= 255.0
+#     return image, atributos
 
-labeled_images = data.map(process_file)
+# labeled_images = df.map(process_file)
 
-print(labeled_images)
+# print(labeled_images)
