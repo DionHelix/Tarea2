@@ -11,7 +11,7 @@ import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.optimizers import RMSprop, SGD
 from tensorflow import keras
-from keras import Sequential,layers,optimizers,metrics,losses
+from keras import models, Sequential,layers,optimizers,metrics,losses
 from keras.layers import Dense, Reshape, LeakyReLU, Conv2D
 from tensorflow.python.keras.models import Model
 from tensorflow.keras.callbacks import TensorBoard
@@ -20,7 +20,7 @@ from keras import optimizers
 from keras.layers import Dropout, Dense, Flatten, GlobalAveragePooling2D, Conv2D, Activation ,MaxPooling2D
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-from keras.utils import np_utils
+from keras.layers import Input
 
 # with open('list_attr_celeba.txt', 'r') as f:
 #     print("skipping : " + f.readline())
@@ -66,24 +66,19 @@ print('train data: ', train_data)
 
 #### Modelo ####
 
-model = Sequential()
-model.add(Conv2D(10, (3, 3), input_shape=(192,192,3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(10, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(20, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Flatten())
-model.add(Dense(64))
-model.add(Activation('relu'))
-model.add(Dropout(0.2))
-model.add(Dense(1))
-model.add(Activation('sigmoid'))
-model.compile(loss='binary_crossentropy',
-              optimizer='rmsprop',
-              metrics=['accuracy']) 
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(192, 192, 3)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.Flatten())
+model.add(layers.Dense(64, activation='relu'))
+model.add(layers.Dense(40))
 model.summary()
-history = model.fit(train_data, batch_size = 30, epochs = 10, verbose=1, validation_data = test_data)
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy,
+              metrics=['accuracy'])
+history = model.fit(train_data, epochs=10, 
+                    validation_data=(test_data))
