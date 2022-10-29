@@ -48,37 +48,29 @@ def process_file(file_name, atributos):
     image /= 255.0
     return image, atributos
 
-labeled_images = data.map(process_file)
+labeled_images = data.map(process_file).batch(10)
 
 print('labeled images:  ', labeled_images)
-
-#for image, attri in labeled_images.take(2):
-#    plt.imshow(image)
-#    plt.show()
-#    print(image.shape)
-
-##### Separación de la Data ######
 
 test_data = labeled_images.take(50)
 train_data = labeled_images.skip(50)
 print('test data: ', test_data)
 print('train data: ', train_data)
 
-#### Modelo ####
 
 model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(192, 192, 3)))
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(None, 192, 192, 3)))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(40))
+model.add(layers.Dense(1))
 model.summary()
 
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy,
               metrics=['accuracy'])
 history = model.fit(train_data, epochs=10, 
-                    validation_data=(test_data))
+                    validation_data=test_data)
