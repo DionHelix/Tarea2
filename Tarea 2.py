@@ -31,6 +31,7 @@ from keras.layers import Input
 ##### Leer la Data #####
 
 df =  pd.read_csv('attr_celeba_prepared.txt', sep=' ', header=None)
+df =  df.replace(-1, 0)
 files = tf.data.Dataset.from_tensor_slices(df[0])
 atributos = tf.data.Dataset.from_tensor_slices(df.iloc[:,1:].to_numpy())
 data = tf.data.Dataset.zip((files, atributos))
@@ -45,7 +46,7 @@ def process_file(file_name, atributos):
     image /= 255.0
     return image, atributos
 
-labeled_images = data.map(process_file).batch(10)
+labeled_images = data.map(process_file).batch(128)
 
 print('labeled images:  ', labeled_images)
 
@@ -59,16 +60,36 @@ input_shape=(192, 192, 3)
 model = models.Sequential()
 model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, data_format='channels_last'))
 model.add(layers.MaxPooling2D((2, 2)))
+model.add(Dropout(0.2))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
+model.add(Dropout(0.2))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Flatten())
+model.add(Dropout(0.2))
 model.add(layers.Dense(40))
+model.add(layers.Dense(40))
+model.add(Activation('sigmoid'))
 model.summary()
 
-model.compile(optimizer='RMSprop',
-              loss=tf.keras.losses.CategoricalCrossentropy(reduction=tf.keras.losses.Reduction.NONE),
+model.compile(optimizer=keras.optimizers.RMSprop(),
+              loss=tf.keras.losses.MeanSquaredError(),
               metrics=['accuracy'])
-history = model.fit(train_data, epochs=10, 
-                    validation_data=test_data)
+history = model.fit(train_data,
+                    steps_per_epoch=20,
+                    epochs=10,
+                    verbose=1,
+          validation_data=test_data)          
+
+history = history.history
+plt.plot(history['accuracy'])
+plt.plot(history['val_accuracy'])
+plt.title('Precisión VS Val-Precisión')
+plt.show()
+
+plt.plot(history['loss'])
+plt.plot(history['val_loss'],c ='red')
+
+plt.title('loss vs val-loss')
+plt.show()
