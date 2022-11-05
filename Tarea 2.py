@@ -51,10 +51,13 @@ labeled_images = data.map(process_file).batch(batch_size)
 
 print('labeled images:  ', labeled_images)
 
-train_data = labeled_images.skip(800)
-test_data = labeled_images.take(200)
-print('test data: ', test_data)
+train_data = labeled_images.take(18000)
 print('train data: ', train_data)
+print(len(train_data))
+test_data = labeled_images.take(2000)
+print('test data: ', test_data)
+print(len(test_data))
+
 
 input_shape=(192, 192, 3)
 
@@ -84,10 +87,6 @@ model.add(layers.Dense(40))
 model.add(Activation('sigmoid'))
 model.summary()
 
-#Guardar Modelo
-
-# model.save("FaceRecog.h5")
-
 steps_per_epoch = len(train_data)//batch_size
 print('steps_per_epoch: ', steps_per_epoch)
 validation_steps = len(test_data)//batch_size
@@ -95,27 +94,32 @@ print('validation_steps: ', validation_steps)
 
 # #Compilación del modelo
 
-# model.compile(optimizer=keras.optimizers.Adam(),
-#               loss=tf.keras.losses.BinaryCrossentropy(),
-#               metrics=tf.keras.metrics.BinaryAccuracy())
-# history = model.fit(train_data,
-#                     steps_per_epoch = steps_per_epoch,
-#                     epochs=25,
-#                     verbose=1,
-#                     validation_steps = validation_steps,
-#           validation_data=test_data)          
+model.compile(optimizer=keras.optimizers.Adam(),
+              loss=tf.keras.losses.BinaryCrossentropy(),
+              metrics=tf.keras.metrics.BinaryAccuracy(), 
+              run_eagerly=True)
+history = model.fit(train_data,
+                    steps_per_epoch = steps_per_epoch,
+                    epochs=50,
+                    verbose=1,
+                    validation_steps = validation_steps,
+          validation_data=test_data)          
 
-# history = history.history
-# plt.plot(history['binary_accuracy'])
-# plt.plot(history['val_binary_accuracy'], c = 'green')
-# plt.title('Precisión VS Val-Precisión')
-# plt.show()
+history = history.history
+plt.plot(history['binary_accuracy'])
+plt.plot(history['val_binary_accuracy'], c = 'green')
+plt.title('Precisión VS Val-Precisión')
+plt.show()
 
-# plt.plot(history['loss'])
-# plt.plot(history['val_loss'],c ='red')
+plt.plot(history['loss'])
+plt.plot(history['val_loss'],c ='red')
 
-# plt.title('loss vs val-loss')
-# plt.show()
+plt.title('loss vs val-loss')
+plt.show()
+
+#Guardar Modelo
+
+model.save("FaceRecogPlus.h5")
 
 #Cargar la red:
 # modelo_cargado = tf.keras.models.load_model('FaceRecog.h5')
