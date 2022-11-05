@@ -16,7 +16,6 @@ from tensorflow.keras.callbacks import TensorBoard
 from keras import optimizers
 from keras.layers import Dropout, Dense, Flatten, Conv2D, Activation, MaxPooling2D
 from keras.callbacks import ModelCheckpoint
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 from keras.layers import Input
 
 # with open('list_attr_celeba.txt', 'r') as f:
@@ -50,41 +49,49 @@ labeled_images = data.map(process_file).batch(128)
 
 print('labeled images:  ', labeled_images)
 
-test_data = labeled_images.take(50)
-train_data = labeled_images.skip(50)
+train_data = labeled_images.skip(800)
+test_data = labeled_images.take(200)
 print('test data: ', test_data)
 print('train data: ', train_data)
 
 input_shape=(192, 192, 3)
 
 model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, data_format='channels_last'))
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(Dropout(0.2))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(Dropout(0.2))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.Dense(64, activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(Dropout(0.2))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(Dropout(0.2))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(32, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(Dropout(0.2))
 model.add(layers.Flatten())
-model.add(Dropout(0.2))
-model.add(layers.Dense(40))
+model.add(layers.Dense(100))
 model.add(layers.Dense(40))
 model.add(Activation('sigmoid'))
 model.summary()
 
-model.compile(optimizer=keras.optimizers.RMSprop(),
-              loss=tf.keras.losses.MeanSquaredError(),
-              metrics=['accuracy'])
+model.compile(optimizer=keras.optimizers.Adam(),
+              loss=tf.keras.losses.BinaryCrossentropy(),
+              metrics=tf.keras.metrics.BinaryAccuracy())
 history = model.fit(train_data,
-                    steps_per_epoch=20,
-                    epochs=10,
+                    steps_per_epoch=400,
+                    epochs=25,
                     verbose=1,
           validation_data=test_data)          
 
 history = history.history
 plt.plot(history['accuracy'])
-plt.plot(history['val_accuracy'])
+plt.plot(history['val_accuracy'], c = 'green')
 plt.title('Precisión VS Val-Precisión')
 plt.show()
 
