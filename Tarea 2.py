@@ -18,16 +18,16 @@ from keras.layers import Dropout, Dense, Flatten, Conv2D, Activation, MaxPooling
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Input
 
-# with open('list_attr_celeba.txt', 'r') as f:
-#     print("skipping : " + f.readline())
-#     print("skipping headers : " + f.readline())
-#     with open('attr_celeba_prepared.txt', 'w') as newf:
-#         for line in f:
-#             new_line = ' '.join(line.split())
-#             newf.write(new_line)
-#             newf.write('\n')
+with open('list_attr_celeba.txt', 'r') as f:
+    print("skipping : " + f.readline())
+    print("skipping headers : " + f.readline())
+    with open('attr_celeba_prepared.txt', 'w') as newf:
+        for line in f:
+            new_line = ' '.join(line.split())
+            newf.write(new_line)
+            newf.write('\n')
 
-##### Leer la Data #####
+#### Leer la Data #####
 
 df =  pd.read_csv('attr_celeba_prepared.txt', sep=' ', header=None)
 df =  df.replace(-1, 0)
@@ -92,7 +92,7 @@ print('steps_per_epoch: ', steps_per_epoch)
 validation_steps = len(test_data)//batch_size
 print('validation_steps: ', validation_steps)
 
-# #Compilación del modelo
+#Compilación del modelo
 
 model.compile(optimizer=keras.optimizers.Adam(),
               loss=tf.keras.losses.BinaryCrossentropy(),
@@ -122,4 +122,4 @@ plt.show()
 model.save("FaceRecogPlus.h5")
 
 #Cargar la red:
-# modelo_cargado = tf.keras.models.load_model('FaceRecog.h5')
+modelo_cargado = tf.keras.models.load_model('FaceRecogPlus.h5')
