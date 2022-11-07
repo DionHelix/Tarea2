@@ -83,10 +83,10 @@ for layer in model.layers[:18]:
     
 model.summary()
 
-steps_per_epoch = len(train_data)//batch_size
-print('steps_per_epoch: ', steps_per_epoch)
-validation_steps = len(test_data)//batch_size
-print('validation_steps: ', validation_steps)
+# steps_per_epoch = len(train_data)//batch_size
+# print('steps_per_epoch: ', steps_per_epoch)
+# validation_steps = len(test_data)//batch_size
+# print('validation_steps: ', validation_steps)
 
 #Compilación del modelo
 
@@ -95,10 +95,10 @@ model.compile(optimizer=keras.optimizers.RMSprop(),
               metrics=tf.keras.metrics.BinaryAccuracy(),
               run_eagerly=True)
 history = model.fit(train_data,
-                    steps_per_epoch = steps_per_epoch,
+                    #steps_per_epoch = steps_per_epoch,
                     epochs=10,
                     verbose=1,
-                    validation_steps = validation_steps,
+                    #validation_steps = validation_steps,
                     validation_data=test_data)          
 
 history = history.history
