@@ -116,3 +116,5 @@ plt.show()
 score = model.evaluate(test_data, verbose=0)
 print(score)
 
+pred = model.predict(test_data) 
+print(pred) 
