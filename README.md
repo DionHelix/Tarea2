@@ -1,1 +1,2 @@
-# Tarea2
+# Tarea2 - Red Neuronal Artificial Para el Reconocimiento Facial 
+ --- Reporte ---
