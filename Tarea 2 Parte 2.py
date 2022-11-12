@@ -114,12 +114,12 @@ plt.plot(history['val_loss'],c ='red')
 plt.title('loss vs val-loss')
 plt.show()
 
-score = model.evaluate(test_data, verbose=0)
-print(score)
+Evaluate = model.evaluate(test_data, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False)
+print(Evaluate)
 
-pred = model.predict(test_data) 
-print(pred) 
-
+pred = model.predict_generator(test_data, steps=None, max_queue_size=10, workers=1, use_multiprocessing=False, verbose=1)  
+print(pred)
+predicted = np.argmax(pred, axis=1)  
 
 def predict_one(model):  
     class_names = ['Bowie', 'Otro']
