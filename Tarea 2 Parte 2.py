@@ -41,6 +41,7 @@ train_data = gentrain.flow_from_directory(train_dir,
                 target_size=(iw, ih),
                 class_mode='binary')
 gentest = ImageDataGenerator(rescale=1. / 255)
+
 test_data = gentest.flow_from_directory(test_dir,
                 batch_size=batch_size,
                 target_size=(iw, ih),
@@ -118,3 +119,23 @@ print(score)
 
 pred = model.predict(test_data) 
 print(pred) 
+
+
+def predict_one(model):  
+    class_names = ['Bowie', 'Otro']
+    image_batch, classes_batch = next(test_data)
+    predicted_batch = model.predict(image_batch)
+    for k in range(0,image_batch.shape[0]):
+      image = image_batch[k]
+      pred = predicted_batch[k]
+      the_pred = np.argmax(pred)
+      predicted = class_names[the_pred]
+      val_pred = max(pred)
+      the_class = np.argmax(classes_batch[k])
+      value = class_names[np.argmax(classes_batch[k])]
+      plt.figure(k)
+      isTrue = (the_pred == the_class)
+      plt.title(str(isTrue) + ' - class: ' + value + ' - ' + 'predicted: ' + predicted + '[' + str(val_pred) + ']')
+      plt.imshow(image)
+
+predict_one(model)  
