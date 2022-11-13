@@ -114,8 +114,8 @@ batchsize nunca pudiese ocurrir otra vez. Con un batchsize de 128 solo se
 obtenían 6 pasos por época, así que se regresó a 50. Se aumentaron las imágenes,
 ahora usando 18000 para entrenar y 2000 de prueba, se aumentaron las épocas a 25. 
 Con estos cambios se obtenían 81 pasos por época, se alcanzó una precisión del 86% 
-y un valor de la función de costo de 0.3036. (ver "Ya logra entrenar - Ya aprende 
-- Modelo Puede ser mejorado.png")
+y un valor de la función de costo de 0.3036. (ver "Ya logra entrenar - Ya aprende - Modelo
+Puede ser mejorado.png")
 
 Este modelo con 25 épocas se guardó como "FaceRecog.h5".
 
@@ -129,8 +129,8 @@ Este modelo con 50 épocas se guardó como "FaceRecogPlus.h5".
 En la segunda red nuevamente se hicieron pruebas con 10 épocas, 70 imágenes para
 entrenar, 34 de prueba, batch size de 50 antes del entrenamiento real.
 
-Para la segunda red se encontró un error en el entrenamiento (ver "Segunda Parte 
-- Error en la función Train.png"). Esto se debió a la longitud de la data de
+Para la segunda red se encontró un error en el entrenamiento (ver "Segunda Parte - Error 
+en la función Train.png"). Esto se debió a la longitud de la data de
 entrenamiento, era demasiado corta, por lo que el parámetro "steps per epoch"
 impedía que la red entrenara. Este error se solucionó quitando el parámetro. 
 Se encontró que una precisión de 88% y un valor de la función de costo de 0.2927.
